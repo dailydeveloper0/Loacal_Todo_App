@@ -10,6 +10,7 @@ class SQLHelper {
         id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         title TEXT,
         description TEXT,
+        isCompeleted INTEGER,
         createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
       )""");
       },
@@ -20,6 +21,7 @@ class SQLHelper {
     final db = await SQLHelper.db();
     try {
       int result = await db.insert('todos', newTodo);
+    
       db.close();
       return result;
     } catch (e) {
@@ -29,7 +31,8 @@ class SQLHelper {
     }
   }
 
-  static Future<int> updateTodo(int id, Map<String, dynamic> updatedTodo) async {
+  static Future<int> updateTodo(
+      int id, Map<String, dynamic> updatedTodo) async {
     final db = await SQLHelper.db();
     try {
       int result = await db
@@ -43,7 +46,7 @@ class SQLHelper {
     }
   }
 
-  static void deleteTodo(int id) async {
+  static Future<void> deleteTodo(int id) async {
     final db = await SQLHelper.db();
     try {
       await db.delete('todos', where: "id = ?", whereArgs: [id]);
